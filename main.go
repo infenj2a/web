@@ -24,5 +24,5 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "index.html", gin.H{})
 	})
-	http.ListenAndServe(":"+port, nil)
+	router.Run(":" + port)
 }

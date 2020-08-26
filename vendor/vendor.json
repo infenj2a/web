@@ -1,3 +1,6 @@
 {
-	"rootPath": "./bin/smplgo"
+	"comment": "",
+	"ignore": "test",
+	"package": [],
+	"rootPath": "smplgo"
 }
