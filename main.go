@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -18,9 +19,10 @@ func main() {
 	router.LoadHTMLGlob("view/index.html")
 
 	port := os.Getenv("PORT")
+	fmt.Println("port=", port)
 	// http.HandleFunc("/", hello)
 	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "index.html")
+		c.String(http.StatusOK, "index.html", gin.H{})
 	})
 	http.ListenAndServe(":"+port, nil)
 }
