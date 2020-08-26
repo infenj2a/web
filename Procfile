@@ -1,1 +1,1 @@
-web: smplgo
+web: ./bin/main
