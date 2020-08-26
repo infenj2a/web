@@ -18,7 +18,7 @@ func main() {
 	port := os.Getenv("PORT")
 	http.HandleFunc("/", hello)
 	router.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!!")
+		c.String(http.StatusOK, "Hello!!")
 	})
 	http.ListenAndServe(":"+port, nil)
 }
