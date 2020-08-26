@@ -16,7 +16,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := gin.Default()
 	//tmpl読み込み
-	r.LoadHTMLGlob("view/index.html")
+	router.LoadHTMLGlob("view/index.html")
 
 	port := os.Getenv("PORT")
 	http.HandleFunc("/", hello)
