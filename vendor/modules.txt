@@ -23,6 +23,8 @@ github.com/golang/protobuf/proto
 github.com/json-iterator/go
 # github.com/kr/fs v0.1.0
 ## explicit
+# github.com/kr/godep v0.0.0-20180126220526-ce0bfadeb516
+## explicit
 # github.com/kr/pretty v0.2.1
 ## explicit
 # github.com/leodido/go-urn v1.2.0

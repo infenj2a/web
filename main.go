@@ -16,7 +16,7 @@ import (
 func main() {
 	router := gin.Default()
 	//tmpl読み込み
-	router.LoadHTMLGlob("view/index.html")
+	router.LoadHTMLGlob("view/*.html")
 
 	port := os.Getenv("PORT")
 	fmt.Println("port=", port)
