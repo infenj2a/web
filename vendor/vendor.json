@@ -1,6 +1,3 @@
 {
-	"comment": "",
-	"ignore": "test",
-	"package": [],
-	"rootPath": "smplgo"
+	"rootPath": "smplgo/main.go"
 }
