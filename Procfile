@@ -1,1 +1,1 @@
-web: bin/smplgo/main.go
+web: bin/main.go
