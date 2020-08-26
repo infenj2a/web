@@ -3,6 +3,7 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
@@ -13,7 +14,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	router := gin.Default()
 	port := os.Getenv("PORT")
 	http.HandleFunc("/", hello)
+	router.GET("/hello", func(c *gin.Context) {
+		c.String(http.StatusOK, "Hello World!!")
+	})
 	http.ListenAndServe(":"+port, nil)
 }
