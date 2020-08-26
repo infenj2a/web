@@ -16,12 +16,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := gin.Default()
 	//tmpl読み込み
-	r.LoadHTMLGlob("view/*tmpl")
+	r.LoadHTMLGlob("view/index.html")
 
 	port := os.Getenv("PORT")
 	http.HandleFunc("/", hello)
 	router.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "index.tmpl")
+		c.String(http.StatusOK, "index.html")
 	})
 	http.ListenAndServe(":"+port, nil)
 }
