@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -15,14 +14,12 @@ import (
 
 func main() {
 	router := gin.Default()
-	//tmpl読み込み
-	router.LoadHTMLGlob("view/*.html")
-
-	port := os.Getenv("PORT")
-	fmt.Println("port=", port)
-	// http.HandleFunc("/", hello)
 	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "index.html", gin.H{})
+		c.String(http.StatusOK, "send token and url and filename to /load use post")
 	})
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
 	router.Run(":" + port)
 }
