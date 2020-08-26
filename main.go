@@ -4,18 +4,15 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"os"
 )
 
-// func hello(w http.ResponseWriter, r *http.Request) {
-// 	io.WriteString(w, "Hello World!")
-// }
-
 func main() {
 	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "send token and url and filename to /load use post")
+	router.LoadHTMLGlob("view/*.html")
+
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(200, "index.html", gin.H{})
 	})
 	port := os.Getenv("PORT")
 	if port == "" {
