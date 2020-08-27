@@ -3,21 +3,42 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"main/model"
+	"net/http"
 )
 
 type Server struct {
 	DB *sqlx.DB
 }
 
-//TOPページ　状態が死んでいるスレッドの取得は行わない
-func (s *Server) HelloPage(c *gin.Context) {
-	c.HTML(200, "index.html", gin.H{})
+func (s *Server) GetPage(c *gin.Context) {
+	errMsg := ""
+	articles, err := model.GetArticle(s.DB)
+	if err != nil {
+		errMsg = "エラー発生"
+		articles = []model.ArticleDB{}
+		c.Redirect(http.StatusMovedPermanently, "/")
+		return
+	}
+	c.HTML(200, "index.html", gin.H{
+		"articles": articles,
+		"errMsg":   &errMsg,
+	})
+	return
 }
 
 func (s *Server) PostPage(c *gin.Context) {
-	c.Request.ParseForm()
-	name := c.Request.Form["name"][0]
-	c.HTML(200, "index0.html", gin.H{
-		"name": name,
+	errMsg := ""
+	articles, err := model.PostArticle(s.DB)
+	if err != nil {
+		errMsg = "エラー発生"
+		articles = []model.ArticleDB{}
+		c.Redirect(http.StatusMovedPermanently, "/")
+		return
+	}
+	c.HTML(200, "index.html", gin.H{
+		"articles": articles,
+		"errMsg":   &errMsg,
 	})
+	return
 }

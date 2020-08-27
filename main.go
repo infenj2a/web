@@ -17,7 +17,7 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("view/*.html")
 
-	r.GET("/", server.HelloPage)
+	r.GET("/", server.GetPage)
 	r.POST("/", server.PostPage)
 	port := os.Getenv("PORT")
 	if port == "" {

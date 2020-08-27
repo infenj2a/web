@@ -5,7 +5,12 @@
     <title>Sample App</title>
 </head>
 <body>
-    <h1>Hello World!!!</h1>
+  {{range .articles}}
+    <h1>{{.ID}}</h1>
+    <h2>{{.Title}}</h2>
+    <h3>{{.Status}}</h3>
+    <h4>{{.Updatetime}}</h4>
+  {{end}}
     <form action="/" method="post" style="display:inline;" >
       <p>検索したいスレッドの名称を入れて下さい</p>
       <input type="search" name="name" placeholder="キーワードを入力">
