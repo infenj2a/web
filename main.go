@@ -4,21 +4,21 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 	"main/controller"
+	"main/util"
 	"os"
 )
 
 func main() {
-	db, _ := sqlx.Open("postgres", os.Getenv("DATABASE_URL"))
-	defer db.Close()
+	server := controller.Server{
+		DB: util.InitDB(),
+	}
 
 	r := gin.Default()
 	r.LoadHTMLGlob("view/*.html")
 
-	r.GET("/", controller.HelloPage)
-	r.POST("/", controller.PostPage)
+	r.GET("/", server.HelloPage)
+	r.POST("/", server.PostPage)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
