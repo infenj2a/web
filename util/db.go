@@ -25,6 +25,7 @@ func InitDB() *sqlx.DB {
 	param := conf.User + ":" + conf.Password + "@tcp(" + conf.Host + ":" + conf.Port + ")/" +
 		conf.Database + "?parseTime=true&loc=Asia%2FTokyo&charset=utf8mb4"
 	db, err := sqlx.Open("postgres", param)
+	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
