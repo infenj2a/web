@@ -5,13 +5,12 @@ import (
 )
 
 //TOPページ　状態が死んでいるスレッドの取得は行わない
-func HelloPage(ctx *gin.Context) {
-	ctx.HTML(200, "index.html", gin.H{})
+func HelloPage(c *gin.Context) {
+	c.HTML(200, "index.html", gin.H{})
 }
 
-func PostPage(ctx *gin.Context) {
-	name := ctx.Request.Form["name"][0]
-	ctx.HTML(200, "index0.html", gin.H{
-		"name": name,
+func PostPage(c *gin.Context) {
+	c.HTML(200, "index0.html", gin.H{
+		"name": "nameだよ",
 	})
 }
