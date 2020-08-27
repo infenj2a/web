@@ -13,7 +13,7 @@ func main() {
 	router.LoadHTMLGlob("view/*.html")
 
 	router.GET("/", controller.HelloPage)
-	router.GET("/get", controller.PostPage)
+	router.POST("/", controller.PostPage)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
