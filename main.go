@@ -5,7 +5,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"main/controller"
-	"main/util"
 	"os"
 )
 
