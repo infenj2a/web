@@ -27,7 +27,8 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 	}
 	resultStruct := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	rows, err := db.Queryx(`SELECT * FROM articles WHERE status = ? ORDER BY updatetime DESC LIMIT 5 OFFSET ?;`, "Alive", page)
+	query := "SELECT * FROM articles WHERE status = $1 order by updatetime desc LIMIT 5 OFFSET $2"
+	rows, err := db.Queryx(query, "Alive", page)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,13 +37,12 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 		//rows.Scanの代わりにrows.StructScanを使う
 		err := rows.StructScan(&DB)
 		if err != nil {
-			fmt.Println("err")
 			log.Fatal(err)
-			return nil, 0, nil, err
 		}
 		resultStruct = append(resultStruct, DB)
 	}
-	rows, err = db.Queryx(`SELECT COUNT(status) FROM articles WHERE status = "Alive"`)
+	query = "SELECT COUNT(status) FROM articles WHERE status = $1"
+	rows, err = db.Queryx(query, "Alive")
 	resultCount := checkCount(rows)
 	indexStruct, div := exprCount(resultCount, index)
 	if err != nil {
@@ -63,9 +63,6 @@ func checkCount(rows *sqlx.Rows) (count int) {
 
 //index は基準
 func exprCount(count, index int) ([]CountPage, int) {
-	fmt.Println("exprCount")
-	fmt.Println("count=", count)
-	fmt.Println("index=", index)
 	indexStruct := make([]CountPage, 0)
 	div := (count % 5)
 	if div == 0 {
@@ -74,10 +71,10 @@ func exprCount(count, index int) ([]CountPage, int) {
 		div = (count / 5) + 1
 	}
 	if count <= 5 || div < index {
-		fmt.Println("5件以内or異常ページ感知")
+		// fmt.Println("5件以内or異常ページ感知")
 		return indexStruct, div
 	} else {
-		fmt.Println("for分開始")
+		// fmt.Println("for文開始")
 		slice := []int{index}
 		for x := 1; x < 5; x++ {
 			if z := index + x; div >= z {
@@ -90,9 +87,9 @@ func exprCount(count, index int) ([]CountPage, int) {
 				break
 			}
 		}
-		fmt.Println("ソート前スライス=", slice)
+		// fmt.Println("ソート前スライス=", slice)
 		sort.Sort(sort.IntSlice(slice))
-		fmt.Println("ソート後スライス=", slice)
+		// fmt.Println("ソート後スライス=", slice)
 		for _, v := range slice {
 			indexStruct = append(indexStruct, CountPage{v})
 		}
@@ -103,7 +100,7 @@ func AllGetArticles(db *sqlx.DB) ([]ArticleDB, error) {
 	fmt.Println("AllGetArticles")
 	result := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	rows, err := db.Queryx(`SELECT * FROM articles;`)
+	rows, err := db.Queryx("SELECT * FROM articles")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,7 +110,6 @@ func AllGetArticles(db *sqlx.DB) ([]ArticleDB, error) {
 		err := rows.StructScan(&DB)
 		if err != nil {
 			log.Fatal(err)
-			return nil, err
 		}
 		result = append(result, DB)
 	}
@@ -124,7 +120,8 @@ func GetArticleOne(db *sqlx.DB, id string) ([]ArticleDB, error) {
 	fmt.Println("GetArticles")
 	result := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	rows, err := db.Queryx(`SELECT * FROM articles WHERE ID = ?;`, id)
+	query := "SELECT * FROM articles WHERE id = $1"
+	rows, err := db.Queryx(query, id)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -144,43 +141,32 @@ func GetArticleOne(db *sqlx.DB, id string) ([]ArticleDB, error) {
 // NewArticlePosts = INSERT
 func PostArticleNewPages(db *sqlx.DB, title string) int {
 	fmt.Println("PostArticleNewPages")
-	stmt, err := db.Prepare(`INSERT INTO articles (title, status) VALUES (?, ?);`)
+	query := "INSERT INTO articles (title,status) VALUES($1,$2) RETURNING id"
+	stmt, err := db.Prepare(query)
+	defer stmt.Close()
 	if err != nil {
-		fmt.Println("stmt err")
 		log.Fatal(err)
-		return 0
 	}
-	resp, err := stmt.Exec(title, "Alive")
+	id := 0
+	err = stmt.QueryRow(title, "Alive").Scan(&id)
 	if err != nil {
-		fmt.Println("resp err")
 		log.Fatal(err)
-		return 0
 	}
-	//影響のあった件数が返る index + errが返る
-	// id, _ := resp.RowsAffected()
-	//一番最後のIDを取得したい場合 index + errが返る
-	id, err := resp.LastInsertId()
-	if err != nil {
-		fmt.Println("LastInsertId err")
-		return 0
-	}
-	return int(id)
+	return id
 }
 
 func DeleteArticlePages(db *sqlx.DB, id int) error {
 	fmt.Println("DeleteArticlePages")
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	stmt, err := db.Prepare(`UPDATE articles SET status = ? WHERE ID = ?;`)
+	query := "UPDATE articles SET statsu = $1 WHERE id = $2"
+	stmt, err := db.Prepare(query)
+	defer stmt.Close()
 	if err != nil {
-		fmt.Println("Delete UPDATE err")
 		log.Fatal(err)
-		return err
 	}
 	_, err = stmt.Exec("Dead", id)
 	if err != nil {
-		fmt.Println("Delete EXEC err")
 		log.Fatal(err)
-		return err
 	}
 	return nil
 }
@@ -188,14 +174,13 @@ func DeleteArticlePages(db *sqlx.DB, id int) error {
 func DropArticlePages(db *sqlx.DB, id int, status string) error {
 	fmt.Println("DropArticlePages")
 	if status == "Dead" {
-		stmt, err := db.Prepare(`DELETE FROM articles WHERE ID = ?;`)
+		query := "DELETE FROM articles WHERE id = $1"
+		stmt, err := db.Prepare(query)
 		if err != nil {
-			fmt.Println("Drop stmt err")
 			return err
 		}
 		_, err = stmt.Exec(id)
 		if err != nil {
-			fmt.Println("Drop EXEC err")
 			return err
 		}
 	}
@@ -210,50 +195,43 @@ func StatusChangePage(db *sqlx.DB, id int, status string) error {
 	case "Dead":
 		status = "Alive"
 	default:
-		status = "不明"
+		return nil
 	}
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	stmt, err := db.Prepare(`UPDATE articles SET status = ? WHERE ID = ?;`)
+	query := "UPDATE articles SET status = $1 WHERE id = $2"
+	stmt, err := db.Prepare(query)
 	if err != nil {
-		fmt.Println("StatusChange stmt err")
 		log.Fatal(err)
-		return err
 	}
 	_, err = stmt.Exec(status, id)
 	if err != nil {
-		fmt.Println("StatusChange EXEC err")
 		log.Fatal(err)
-		return err
 	}
 	return nil
 }
 
 func UpdateArticleTimes(db *sqlx.DB, id string) error {
 	fmt.Println("UpdateArticleTimes")
-	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	stmt, err := db.Prepare(`UPDATE articles SET updatetime = ? WHERE ID = ?;`)
+	query := "UPDATE articles SET updatetime = $1 WHERE id = $2"
+	stmt, err := db.Prepare(query)
 	if err != nil {
-		fmt.Println("UPDATETIME stmt err")
 		log.Fatal(err)
-		return err
 	}
 	_, err = stmt.Exec(time.Now(), id)
 	if err != nil {
-		fmt.Println("UPDATETIME EXEC err")
 		log.Fatal(err)
-		return err
 	}
 	return nil
 }
 
 func PostSearchPages(db *sqlx.DB, title string) ([]ArticleDB, error) {
 	fmt.Println("PostSearchPages")
-	title = "%" + title + "%"
+	keyword := "%" + title + "%"
 	result := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	rows, err := db.Queryx(`SELECT * FROM articles WHERE title LIKE ?;`, title)
+	query := "SELECT * FROM articles WHERE title LIKE $1"
+	rows, err := db.Queryx(query, keyword)
 	if err != nil {
-		fmt.Println("PostSearchPages SELECT err")
 		log.Fatal(err)
 	}
 	var DB ArticleDB
@@ -262,7 +240,6 @@ func PostSearchPages(db *sqlx.DB, title string) ([]ArticleDB, error) {
 		err := rows.StructScan(&DB)
 		if err != nil {
 			log.Fatal(err)
-			return nil, err
 		}
 		result = append(result, DB)
 	}

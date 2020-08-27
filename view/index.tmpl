@@ -15,7 +15,7 @@
 <div class="content has-text-centered">
   <form action="/search" method="post" style="display:inline;" >
     <p>検索したいスレッドの名称を入れて下さい</p>
-    <input type="search" name="search" placeholder="キーワードを入力">
+    <input type="search" name="search" placeholder="キーワードを入力" required>
     <input type="submit" name="submit" value="検索">
   </form>
 </div>
@@ -51,14 +51,16 @@
 
 <div class="pageNavigate">
   <ul>
-    {{if ne .PrevPage 0}}
-      <li><a href="/page/{{.PrevPage}}">&laquo; 前</a></li>
-    {{end}}
-    {{range .PageStruct}}
-      <li><a href="/page/{{.Page}}">{{.Page}}</a></li>
-    {{end}}
-    {{if ne .NextPage 0}}
-      <li><a href="/page/{{.NextPage}}">&raquo; 次</a></li>
+    {{if .PageStruct}}
+      {{if ne .PrevPage 0}}
+        <li><a href="/page/{{.PrevPage}}">&laquo; 前</a></li>
+      {{end}}
+      {{range .PageStruct}}
+        <li><a href="/page/{{.Page}}">{{.Page}}</a></li>
+      {{end}}
+      {{if ne .NextPage 0}}
+        <li><a href="/page/{{.NextPage}}">&raquo; 次</a></li>
+      {{end}}
     {{end}}
   </ul>
 </div>

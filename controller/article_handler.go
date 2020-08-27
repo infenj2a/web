@@ -254,7 +254,11 @@ func (s *Server) PostSearchPage(c *gin.Context) {
 	article := new(model.ArticleDB)
 	article.Title = c.Request.Form["search"][0]
 	if article.Title == "" {
-		c.Redirect(http.StatusMovedPermanently, "/")
+		errMsg = "検索キーワードを入力してください"
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"articles": []model.ArticleDB{},
+			"errMsg":   &errMsg,
+		})
 		return
 	}
 	articles, err := model.PostSearchPages(s.DB, article.Title)

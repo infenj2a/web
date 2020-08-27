@@ -19,6 +19,9 @@ func main() {
 	r := gin.Default()
 	m := melody.New()
 
+	//css読み込み準備
+	r.Static("/assets", "./view/assets")
+	r.Static("/static", "./view/static")
 	//tmpl読み込み
 	r.LoadHTMLGlob("view/*tmpl")
 
