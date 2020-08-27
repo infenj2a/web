@@ -9,7 +9,7 @@ import (
 type DBConfig struct {
 	User     string
 	Password string
-	Host     string
+	Connect  string
 	Port     string
 	Database string
 }
@@ -18,12 +18,11 @@ func InitDB() *sqlx.DB {
 	conf := DBConfig{
 		User:     "postgres",
 		Password: "Asdfjkl;",
-		Host:     "postgres",
+		Connect:  "disabel",
 		Port:     "5432",
 		Database: "web_go",
 	}
-	param := conf.User + ":" + conf.Password + "@tcp(" + conf.Host + ":" + conf.Port + ")/" +
-		conf.Database + "?parseTime=true&loc=Asia%2FTokyo&charset=utf8mb4"
+	param := "user=" + conf.User + "dbname=" + conf.Database + "password=" + conf.Password + "sslmode=" + conf.Connect
 	db, err := sqlx.Open("postgres", param)
 	defer db.Close()
 	if err != nil {
