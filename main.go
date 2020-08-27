@@ -10,10 +10,6 @@ import (
 )
 
 func main() {
-	server := controller.Server{
-		DB: util.InitDB(),
-	}
-
 	r := gin.Default()
 	r.LoadHTMLGlob("view/*.html")
 
