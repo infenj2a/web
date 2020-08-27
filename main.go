@@ -16,7 +16,7 @@ func main() {
 	router.POST("/", controller.PostPage)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "8080"
 	}
 	router.Run(":" + port)
 }
