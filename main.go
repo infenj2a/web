@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	router := gin.Default()
-	router.LoadHTMLGlob("view/*.html")
+	r := gin.Default()
+	r.LoadHTMLGlob("view/*.html")
 
-	router.GET("/", controller.HelloPage)
-	router.POST("/", controller.PostPage)
+	r.GET("/", controller.HelloPage)
+	r.GET("/get", controller.PostPage)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	router.Run(":" + port)
+	r.Run(":" + port)
 }
