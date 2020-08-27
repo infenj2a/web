@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	"log"
 	"time"
@@ -14,9 +15,13 @@ type ArticleDB struct {
 }
 
 func GetArticle(db *sqlx.DB) ([]ArticleDB, error) {
+	fmt.Println("GetArticle")
 	resultStruct := make([]ArticleDB, 0)
-	rows, err := db.Queryx(`SELECT * FROM articles`)
+	rows, err := db.Queryx("SELECT * FROM articles")
 	if err != nil {
+		fmt.Println(err)
+		fmt.Println(rows)
+		fmt.Println("SELECTエラー")
 		log.Fatal(err)
 	}
 	var DB ArticleDB
@@ -33,9 +38,11 @@ func GetArticle(db *sqlx.DB) ([]ArticleDB, error) {
 }
 
 func PostArticle(db *sqlx.DB) ([]ArticleDB, error) {
+	fmt.Println("PostArticle")
 	resultStruct := make([]ArticleDB, 0)
-	rows, err := db.Queryx(`SELECT * FROM articles WHERE id = 2`)
+	rows, err := db.Queryx(`SELECT * FROM articles WHERE id = 2;`)
 	if err != nil {
+		fmt.Println("SELECTエラー")
 		log.Fatal(err)
 	}
 	var DB ArticleDB
