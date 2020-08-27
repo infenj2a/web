@@ -16,7 +16,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/tools/godep v0.0.0-20180126220526-ce0bfadeb516 // indirect
 	github.com/urfave/negroni v1.0.0 // indirect
-	golang.org/x/sys v0.0.0-20200824131525-c12d262b63d8 // indirect
+	golang.org/x/sys v0.0.0-20200826173525-f9321e4c35a6 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
