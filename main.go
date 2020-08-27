@@ -4,11 +4,16 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"main/controller"
 	"os"
 )
 
 func main() {
+	db, _ := sqlx.Open("postgres", os.Getenv("DATABASE_URL"))
+	defer db.Close()
+
 	r := gin.Default()
 	r.LoadHTMLGlob("view/*.html")
 
