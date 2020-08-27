@@ -7,6 +7,7 @@ import (
 	melody "gopkg.in/olahol/melody.v1"
 	"main/controller"
 	"main/util"
+	"net/http"
 	"os"
 )
 
@@ -16,6 +17,8 @@ func main() {
 	}
 
 	r := gin.Default()
+	m := melody.New()
+
 	//tmpl読み込み
 	r.LoadHTMLGlob("view/*tmpl")
 
