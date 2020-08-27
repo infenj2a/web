@@ -10,7 +10,7 @@ func HelloPage(c *gin.Context) {
 }
 
 func PostPage(c *gin.Context) {
-	name := []string{c.Request.Form["name"][0]}
+	name := c.PostForm("name")
 	c.HTML(200, "index0.html", gin.H{
 		"name": name,
 	})
