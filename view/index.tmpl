@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+{{template "head" .}}
+<body>
+{{template "header" .}}
+
+<div class="container" >
+{{if .errMsg}}
+<div style="color:red">
+  <p> {{.errMsg}} </p>
+</div>
+{{end}}
+
+<div class="content has-text-centered">
+  <form action="/search" method="post" style="display:inline;" >
+    <p>検索したいスレッドの名称を入れて下さい</p>
+    <input type="search" name="search" placeholder="キーワードを入力">
+    <input type="submit" name="submit" value="検索">
+  </form>
+</div>
+
+<table class="table" style="width:100%;">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>更新時間</th>
+      <th>削除依頼</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {{range .articles}}
+    <tr>
+      <td>
+        <form action="/board/{{.ID}}" method="get" style="display:inline;" >
+          <button class="button-one"><span>{{.Title}}</span></button>
+        </form>
+      </td>
+      <td>{{.Updatetime}}</td>
+      <td>
+        <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
+          <button class="button-two"><span>削除</span></button>
+        </form>
+      </td>
+    </tr>
+  {{end}}
+  </tbody>
+</table>
+</div>
+
+<div class="pageNavigate">
+  <ul>
+    {{if ne .PrevPage 0}}
+      <li><a href="/page/{{.PrevPage}}">&laquo; 前</a></li>
+    {{end}}
+    {{range .PageStruct}}
+      <li><a href="/page/{{.Page}}">{{.Page}}</a></li>
+    {{end}}
+    {{if ne .NextPage 0}}
+      <li><a href="/page/{{.NextPage}}">&raquo; 次</a></li>
+    {{end}}
+  </ul>
+</div>
+
+{{template "footer" .}}
+</body>
+
+</html>

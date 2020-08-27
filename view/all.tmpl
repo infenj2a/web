@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+{{template "head" .}}
+
+<body >
+{{template "header" .}}
+
+<div class="container has-text-centered">
+<h1>記事一覧</h1>
+
+{{if .errMsg}}
+<div style="color:red">
+  <p> {{.errMsg}} </p>
+</div>
+{{end}}
+
+<table class="table" align="center">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>掲示板操作</th>
+      <th>データ抹消</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {{range .articles}}
+    <tr>
+      <td>{{.Title}}</td>
+      <td>
+        <form action="/status/{{.ID}}/{{.Status}}" method="post" style="display:inline;" >
+          {{if ne .Status "Alive"}}
+            <button class="button">復活依頼</button>
+          {{else}}
+            <button class="button">削除依頼</button>
+          {{end}}
+        </form>
+      </td>
+      <td>
+        {{if ne .Status "Alive"}}
+          <form action="/drop/{{.ID}}/{{.Status}}" method="post" style="display:inline;" >
+            <button class="button">削除可能</button>
+          </form>
+        {{end}}
+      </td>
+    </tr>
+  {{end}}
+  </tbody>
+</table>
+</div>
+
+{{template "footer" .}}
+</body>
+
+</html>

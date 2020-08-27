@@ -1,0 +1,61 @@
+{{define "head"}}
+<head>
+  <title>{{.title}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/css/design.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.css.map">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+{{end}}
+
+{{define "header"}}
+<header>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div id="navbarBasicExample" class="navbar-menu is-active">
+      <div class="navbar-start">
+        <a href="/" class="navbar-item">トップページ</a>
+        <a href="/all" class="navbar-item">全スレッド表示</a>
+        <a href="/new" class="navbar-item">新規スレッド作成</a>
+        <a href="/lobby" class="navbar-item">リアルタイムチャット</a>
+      </div>
+    </div>
+  </nav>
+</header>
+{{end}}
+
+{{define "login"}}
+<div class="column is-3 is-offset-4">
+<form action="/login" method="post">
+    <div class="card-header bg-transparent font-weight-bold">
+        掲示板で使用する名前を入力してください
+    </div>
+    <div class="card-body">
+        <div class="form-label-group">
+            <label class="label">ユーザー名</label>
+            <input type="text" size="40" maxlength="10" placeholder="1文字以上10文字以下" name="UN">
+        </div>
+        <div class="form-label-group">
+            <label class="label">PASSWORD</label>
+            <input type="password" size="40" maxlength="10" placeholder="0文字以上10文字以下" name="PW">
+            <div class="text-right mt-md-3">
+                <a class="text-right mt-md-3" href="">パスワード忘れ</a>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent text-center">
+            <button class="btn btn-outline-info  btn-lg">
+                    LOGIN
+            </button>
+        </div>
+    </div>
+</form>
+</div>
+{{end}}
+
+{{define "footer"}}
+<div class="content has-text-centered container">
+  <p> created by <a href="https://golang.org/">Golang</a></p><br>
+</div>
+{{end}}

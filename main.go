@@ -4,6 +4,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	melody "gopkg.in/olahol/melody.v1"
 	"main/controller"
 	"main/util"
 	"os"
@@ -15,10 +16,42 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.LoadHTMLGlob("view/*.html")
+	//tmpl読み込み
+	r.LoadHTMLGlob("view/*tmpl")
 
-	r.GET("/", server.GetPage)
-	r.POST("/", server.PostPage)
+	//GET
+	r.GET("/", server.GetArticlePage)
+	r.GET("/page/:page", server.GetArticlePage)
+	r.GET("/all", server.AllGetArticlePage)
+	r.GET("/new", server.GetArticleNewPage)
+	r.GET("/board/:id", server.SeeBoardPage)
+
+	//POST
+	r.POST("/search", server.PostSearchPage)
+	r.POST("/new", server.PostArticleNewPage)
+	r.POST("/write/:boardName", server.WriteBoardPage)
+	r.POST("/cancel/:boardName/:id", server.DeleteBoardWrite)
+	r.POST("/delete/:id", server.DeleteArticlePage)
+	r.POST("/drop/:id/:status", server.DropArticlePage)
+	r.POST("/status/:id/:status", server.PostStatusChange)
+
+	//WebSocket
+	r.GET("/lobby", server.Lobby)
+	r.GET("/room/:name", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "room.tmpl", gin.H{
+			"Name": c.Param("name"),
+		})
+	})
+
+	r.GET("/room/:name/ws", func(c *gin.Context) {
+		m.HandleRequest(c.Writer, c.Request)
+	})
+
+	m.HandleMessage(func(s *melody.Session, msg []byte) {
+		m.BroadcastFilter(msg, func(q *melody.Session) bool {
+			return q.Request.URL.Path == s.Request.URL.Path
+		})
+	})
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

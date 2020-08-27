@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+{{ template "head" . }}
+
+<body>
+{{ template "header" .}}
+
+<div class="container">
+  {{if .errMsg}}
+  <div style="color:red" class="has-text-centered">
+    <p> {{.errMsg}} </p>
+  </div>
+  {{end}}
+
+  <form action="/new" method="post" style="width:80%;" class="column is-8 is-offset-1">
+    <p>タイトル</p>
+    <textarea class="textarea" name="title" rows="1" cols="10" placeholder="スレッドのタイトルを入力" required></textarea>
+    <p>名前</p>
+    <textarea class="textarea" name="name" maxlength="10" rows="1" cols="10" placeholder="名前が無い場合は「名無しさん」になります"></textarea>
+    <p>テキスト</p>
+    <textarea class="textarea" name="text" rows="4" cols="40" placeholder="1文字以上入力" required></textarea>
+    <div class="control">
+      <button class="button is-link">Submit</button>
+    </div>
+  </form>
+</div>
+
+{{template "footer" .}}
+</body>
+</html>

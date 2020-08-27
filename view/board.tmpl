@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+{{template "head" .}}
+
+<body >
+{{template "header" .}}
+
+<div class="container column is-8 is-offset-2">
+
+{{if .errMsg}}
+  <div style="color:red" class="has-text-centered">
+    <p> {{.errMsg}} </p>
+  </div>
+{{end}}
+
+<div class="content has-text-centered">
+    <h1>{{.boardTitle}}</h1>
+</div>
+
+{{$BoardName := .boardName}}
+{{range .board}}
+  <table class="table" style="width:100%">
+    <th>{{.UserName}}</th><th align="right">{{.Time}}</th>
+      <tbody>
+        <td>{{.Text}}</td>
+        <td align="right">
+          <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
+            <button class="button">書き込みを削除</button>
+          </form>
+        </td>
+    </tbody>
+  </table>
+{{end}}
+</div>
+
+<br />
+<div class="container column is-8 is-offset-2">
+<form action="/write/{{.boardName}}" method="post" style="width:100%;">
+  <p>名前</p>
+  <textarea class="textarea" name="name" maxlength="10" rows="1" cols="10" placeholder="名前が無い場合は「名無しさん」になります"></textarea>
+  <p>テキスト<textarea class="textarea" name="text" rows="4" cols="40" placeholder="1文字以上入力" required></textarea></p>
+  <button class="button   is-link">送信</button>
+</form>
+</div>
+</tbody>
+
+{{template "footer" .}}
+</body>
+</html>
