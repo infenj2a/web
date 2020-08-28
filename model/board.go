@@ -61,7 +61,7 @@ func SeeBoardPages(db *sqlx.DB, boardName string) ([]BoardDB, error) {
 	fmt.Println("SeeBoardPages")
 	result := make([]BoardDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	query := "SELECT * FROM " + boardName
+	query := "SELECT * FROM " + boardName + " order by id asc"
 	rows, err := db.Queryx(query)
 	if err != nil {
 		log.Fatal(err)
