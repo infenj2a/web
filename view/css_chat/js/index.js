@@ -1,4 +1,4 @@
-const url = "https://pacific-bayou-32131.herokuapp.com/room/a/ws";
+const url = "ws://" + window.location.host + window.location.pathname + "/ws";
 const ws = new WebSocket(url);
 const name = localStorage.getItem("user")
 const chat = document.getElementById("chat");
@@ -14,7 +14,7 @@ ws.onmessage = function (msg) {
             <div class="line-right-time">${now()}</div>
            </div>`
   }else{
-    let image = '<img src="/static/img/icon.png"/>'
+    let image = '<img src="/chat_css/img/icon.png"/>'
     line =`<div class='line-left'>
                 ${image}
                 <div class='line-left-container'>
