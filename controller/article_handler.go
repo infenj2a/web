@@ -264,6 +264,9 @@ func (s *Server) PostSearchPage(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/")
 		return
 	}
+	if len(articles) == 0 {
+		errMsg = "検索結果が1件もありません"
+	}
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{
 		"articles": articles,
 		"errMsg":   &errMsg,

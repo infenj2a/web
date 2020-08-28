@@ -12,6 +12,7 @@ type BoardDB struct {
 	UserName string    `db:"name"`
 	Text     string    `db:"text"`
 	Time     time.Time `db:"time"`
+	Time2    string
 }
 
 //投稿時にTABLEを作成する
@@ -26,16 +27,12 @@ func CreateBoard(db *sqlx.DB, boardName string) error {
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
-		fmt.Println("STMT NG")
 		log.Fatal(err)
 	}
-	fmt.Println("STMT OK")
 	_, err = stmt.Exec()
 	if err != nil {
-		fmt.Println("STMT NG2")
 		log.Fatal(err)
 	}
-	fmt.Println("STMT OK2")
 	return nil
 }
 
@@ -73,6 +70,7 @@ func SeeBoardPages(db *sqlx.DB, boardName string) ([]BoardDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		DB.Time2 = StringTime(DB.Time)
 		result = append(result, DB)
 	}
 	return result, err

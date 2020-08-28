@@ -9,15 +9,20 @@ import (
 )
 
 type ArticleDB struct {
-	ID         string    `db:"id"`
-	Title      string    `db:"title"`
-	Status     string    `db:"status"`
-	Updatetime time.Time `db:"updatetime"`
+	ID          string    `db:"id"`
+	Title       string    `db:"title"`
+	Status      string    `db:"status"`
+	Updatetime  time.Time `db:"updatetime"`
+	Updatetime2 string
 }
 
 type CountPage struct {
 	Page int
 }
+
+const (
+	L = "2006-01-02 15:04:05"
+)
 
 func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) {
 	fmt.Println("GetArticles")
@@ -39,6 +44,7 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 		if err != nil {
 			log.Fatal(err)
 		}
+		DB.Updatetime2 = StringTime(DB.Updatetime)
 		resultStruct = append(resultStruct, DB)
 	}
 	query = "SELECT COUNT(status) FROM articles WHERE status = $1"
@@ -111,6 +117,7 @@ func AllGetArticles(db *sqlx.DB) ([]ArticleDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
 	return result, err
@@ -133,6 +140,7 @@ func GetArticleOne(db *sqlx.DB, id string) ([]ArticleDB, error) {
 			log.Fatal(err)
 			return nil, err
 		}
+		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
 	return result, err
@@ -241,7 +249,12 @@ func PostSearchPages(db *sqlx.DB, title string) ([]ArticleDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
 	return result, err
+}
+
+func StringTime(t time.Time) string {
+	return t.Format(L)
 }
