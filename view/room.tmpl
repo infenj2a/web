@@ -1,14 +1,17 @@
 <html>
+{{ template "head" . }}
 <style type="text/css" media="screen">
+  @import url("/css_page/css/page.css");
   @import url("/css_chat/css/chat.css");
 </style>
+{{ template "header" .}}
   <head>
     <title>LINE</title>
     <meta name="viewport" content="width=device-width">
   </head>
   <body>
     <div class="line">
-      <div id="room" class="line-header">{{.Name}}</div>
+      <div id="room" class="line-header">ルーム名 : {{.Name}}</div>
       <div id="chat" class="line-container"></div>
       <div class="line-form">
         <input id="text" type="text">
