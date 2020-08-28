@@ -1,4 +1,4 @@
-const url = "ws://" + window.location.host + ":" + window.location.pathname + "/ws";
+const url = "wss://" + window.location.host + window.location.pathname + "/ws";
 const ws = new WebSocket(url);
 const name = localStorage.getItem("user")
 const chat = document.getElementById("chat");
