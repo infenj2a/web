@@ -158,7 +158,7 @@ func PostArticleNewPages(db *sqlx.DB, title string) int {
 func DeleteArticlePages(db *sqlx.DB, id int) error {
 	fmt.Println("DeleteArticlePages")
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	query := "UPDATE articles SET statsu = $1 WHERE id = $2"
+	query := "UPDATE articles SET status = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
 	if err != nil {

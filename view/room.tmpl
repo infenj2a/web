@@ -1,23 +1,18 @@
 <html>
-  <style type="text/css" media="screen">
-    @import url("/css_chat/chat.css");
-    @import url("/js/index.js");
-  </style>
-
   <head>
     <title>LINE</title>
     <meta name="viewport" content="width=device-width">
-    <script type="text/javascript" src="/js/index.js"></script>
-    <!-- <link rel="stylesheet" href="/static/css/common.css"> -->
+    <link rel="stylesheet" href="/css_chat/css/chat.css">
   </head>
   <body>
     <div class="line">
-      <div id="room" class="line-header">room:<<{{.Name}}>></div>
+      <div id="room" class="line-header">{{.Name}}</div>
       <div id="chat" class="line-container"></div>
       <div class="line-form">
         <input id="text" type="text">
         <button class="line-form-button" onclick="send_data()">Send</button>
       </div>
     </div>
+    <script type="text/javascript" src="/css_chat/js/index.js"></script>
   </body>
 </html>

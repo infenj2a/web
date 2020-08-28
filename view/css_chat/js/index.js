@@ -14,7 +14,7 @@ ws.onmessage = function (msg) {
             <div class="line-right-time">${now()}</div>
            </div>`
   }else{
-    let image = '<img src="/chat_css/img/icon.png"/>'
+    let image = '<img src="/css_chat/img/icon.png"/>'
     line =`<div class='line-left'>
                 ${image}
                 <div class='line-left-container'>
