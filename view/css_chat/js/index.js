@@ -39,7 +39,7 @@ text.onkeydown = function (e) {
   }
 };
 
-function send_data(){
+function send_data() {
     if (text.value == "")return;
     text.value = escape_html(text.value);
     let sendData = `{"name":"${name}","message":"${text.value}"}`;
@@ -70,7 +70,7 @@ function escape_html (string) {
     });
 }
 
-function kakunin(btnNo){
+function kakunin(btnNo) {
   if (btnNo == 1){
     link = "Yahoo!Japan";
     href = "http://www.yahoo.co.jp/";
