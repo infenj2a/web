@@ -20,8 +20,10 @@ func main() {
 	m := melody.New()
 
 	//css読み込み準備
-	r.Static("/chat_css", "./view/css_chat")
-	r.Static("/page_css", "./view/css_page")
+	r.Static("/css_chat", "./view/css_chat/css")
+	r.Static("/img", "./view/css_chat/img")
+	r.Static("/css_page", "./view/css_page/css")
+	r.Static("/js", "./view/css_chat/js")
 	//tmpl読み込み
 	r.LoadHTMLGlob("view/*tmpl")
 
