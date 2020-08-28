@@ -1,4 +1,4 @@
-const url = "https://pacific-bayou-32131.herokuapp.com/" + window.location.host + window.location.pathname + "/ws";
+const url = "https://pacific-bayou-32131.herokuapp.com/room/a/ws";
 const ws = new WebSocket(url);
 const name = localStorage.getItem("user")
 const chat = document.getElementById("chat");
