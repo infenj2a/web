@@ -24,7 +24,6 @@ func (s *Server) GetArticlePage(c *gin.Context) {
 		page = 1
 	}
 	errMsg := ""
-	fmt.Println("page=", page)
 	articles, div, pageStruct, err := model.GetArticles(s.DB, page)
 	if err != nil {
 		articles = []model.ArticleDB{}
@@ -33,12 +32,9 @@ func (s *Server) GetArticlePage(c *gin.Context) {
 	}
 	prevPage := page - 1
 	nextPage := page + 1
-	fmt.Println("div=", div)
 	if nextPage > div {
 		nextPage = 0
 	}
-	fmt.Println("prevPage=", prevPage)
-	fmt.Println("nextPage=", nextPage)
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{
 		"articles":   articles,
 		"PrevPage":   prevPage,

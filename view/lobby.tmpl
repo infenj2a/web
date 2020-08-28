@@ -1,9 +1,12 @@
 <html>
-{{ template "head" .}}
+{{ template "head" . }}
+<style type="text/css" media="screen">
+  @import url("/chat_css/css/chat.css");
+</style>
 {{ template "header" .}}
   <head>
     <title>LINE</title>
-    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/chat/css/chat.css">
   </head>
 
   <body>
@@ -12,9 +15,9 @@
       <div id="room" class="line-header">Join Room</div>
       <div id="chat" class="line-container"></div>
       <div class="line-form">
-        <input placeholder="room" id="channel" type="hidden" value="chat">
-        <input placeholder="user name" id="user" type="text">
-        <button id="join" class="line-form-button" onclick="send_data()">Join</button>
+          <input placeholder="room" size="10px" id="channel" type="text">
+          <input placeholder="user name" size="10px" id="user" type="text">
+          <button id="join" class="line-form-button" onclick="send_data()">Join</button>
       </div>
     </div>
 
