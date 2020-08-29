@@ -11,11 +11,11 @@
 
 ## 使用物
 1. Golang  
-    gin
+    gin  
         htmlの制御に使用  
-    sqlx
+    sqlx  
         DBの操作に使用  
-    melody.v1  
+    melody.v1    
         WebSocketにて使用
 
 1. javascript  
