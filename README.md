@@ -1,4 +1,4 @@
-# 転職用ポートフォリオ
+# ポートフォリオ
 - Golangを使用してWEB上で動作する
 - DBと連携して動的なデータの表示が可能となっている
 
@@ -11,12 +11,9 @@
 
 ## 使用物
 1. Golang  
-    gin  
-        htmlの制御に使用  
-    sqlx  
-        DBの操作に使用  
-    melody.v1    
-        WebSocketにて使用
+　　gin　　htmlの制御に使用  
+　　sqlx　　DBの操作に使用  
+　　melody.v1　　WebSocketにて使用
 
 1. javascript  
     WebSocket制御時に使用
