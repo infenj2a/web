@@ -21,19 +21,22 @@ type CountPage struct {
 }
 
 const (
-	L = "2006-01-02 15:04:05"
+	// TOPページの取得件数
+	getRecord = 5
+	// 時間のフォーマット用
+	Layout = "2006-01-02 15:04:05"
 )
 
 func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) {
 	fmt.Println("GetArticles")
 	page := 0
 	if index != 1 {
-		page += (index - 1) * 5
+		page += (index - 1) * getRecord
 	}
 	resultStruct := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	query := "SELECT * FROM articles WHERE status = $1 order by updatetime desc LIMIT 5 OFFSET $2"
-	rows, err := db.Queryx(query, "Alive", page)
+	query := "SELECT * FROM articles WHERE status = $1 order by updatetime desc LIMIT $2 OFFSET $3"
+	rows, err := db.Queryx(query, "Alive", getRecord, page)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,12 +47,17 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 		if err != nil {
 			log.Fatal(err)
 		}
+		// 取得した時間を整形
 		DB.Updatetime2 = StringTime(DB.Updatetime)
 		resultStruct = append(resultStruct, DB)
 	}
+
+	//ArticlesDBの総件数を取得
 	query = "SELECT COUNT(status) FROM articles WHERE status = $1"
 	rows, err = db.Queryx(query, "Alive")
+	//count情報の取得
 	resultCount := checkCount(rows)
+	//count情報よりページャーの作成
 	indexStruct, div := exprCount(resultCount, index)
 	if err != nil {
 		log.Fatal(err)
@@ -70,17 +78,20 @@ func checkCount(rows *sqlx.Rows) (count int) {
 //index は基準
 func exprCount(count, index int) ([]CountPage, int) {
 	indexStruct := make([]CountPage, 0)
+	// TOPページは5件ずつ出力の設定なので
+	// 総数が40件ならページ総数は8必要 総数が41件ならページ総数は9必要
+	// つまり、総数が5で割り切れない場合は+1をする
 	div := (count % 5)
 	if div == 0 {
 		div = (count / 5)
 	} else {
 		div = (count / 5) + 1
 	}
+	// 5件未満もしくは異常値が入力されていた場合はページャーは生成しない
 	if count <= 5 || div < index {
-		// fmt.Println("5件以内or異常ページ感知")
 		return indexStruct, div
 	} else {
-		// fmt.Println("for文開始")
+		//基点となる数字を初期値として、前後の数字を追加していく
 		slice := []int{index}
 		for x := 1; x < 5; x++ {
 			if z := index + x; div >= z {
@@ -93,20 +104,21 @@ func exprCount(count, index int) ([]CountPage, int) {
 				break
 			}
 		}
-		// fmt.Println("ソート前スライス=", slice)
+		//最大5個の数字が入ったスライスをソート
 		sort.Sort(sort.IntSlice(slice))
-		// fmt.Println("ソート後スライス=", slice)
 		for _, v := range slice {
 			indexStruct = append(indexStruct, CountPage{v})
 		}
 		return indexStruct, div
 	}
 }
+
 func AllGetArticles(db *sqlx.DB) ([]ArticleDB, error) {
 	fmt.Println("AllGetArticles")
 	result := make([]ArticleDB, 0)
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
-	rows, err := db.Queryx("SELECT * FROM articles")
+	query := "SELECT * FROM articles"
+	rows, err := db.Queryx(query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -117,6 +129,7 @@ func AllGetArticles(db *sqlx.DB) ([]ArticleDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// 時間の整形
 		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
@@ -140,6 +153,7 @@ func GetArticleOne(db *sqlx.DB, id string) ([]ArticleDB, error) {
 			log.Fatal(err)
 			return nil, err
 		}
+		// 時間の整形
 		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
@@ -156,6 +170,7 @@ func PostArticleNewPages(db *sqlx.DB, title string) int {
 		log.Fatal(err)
 	}
 	id := 0
+	// 挿入したデータのID値を取得
 	err = stmt.QueryRow(title, "Alive").Scan(&id)
 	if err != nil {
 		log.Fatal(err)
@@ -165,7 +180,6 @@ func PostArticleNewPages(db *sqlx.DB, title string) int {
 
 func DeleteArticlePages(db *sqlx.DB, id int) error {
 	fmt.Println("DeleteArticlePages")
-	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
 	query := "UPDATE articles SET status = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
@@ -208,6 +222,7 @@ func StatusChangePage(db *sqlx.DB, id int, status string) error {
 	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
 	query := "UPDATE articles SET status = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
+	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -222,6 +237,7 @@ func UpdateArticleTimes(db *sqlx.DB, id string) error {
 	fmt.Println("UpdateArticleTimes")
 	query := "UPDATE articles SET updatetime = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
+	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -249,12 +265,14 @@ func PostSearchPages(db *sqlx.DB, title string) ([]ArticleDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// 時間の整形
 		DB.Updatetime2 = StringTime(DB.Updatetime)
 		result = append(result, DB)
 	}
 	return result, err
 }
 
+// 時間の整形用
 func StringTime(t time.Time) string {
-	return t.Format(L)
+	return t.Format(Layout)
 }

@@ -57,7 +57,6 @@ func InsertBoard(db *sqlx.DB, boardName, userName, text string) error {
 func SeeBoardPages(db *sqlx.DB, boardName string) ([]BoardDB, error) {
 	fmt.Println("SeeBoardPages")
 	result := make([]BoardDB, 0)
-	//SELECTを実行。db.Queryの代わりにdb.Queryxを使う。
 	query := "SELECT * FROM " + boardName + " order by id asc"
 	rows, err := db.Queryx(query)
 	if err != nil {
@@ -70,6 +69,7 @@ func SeeBoardPages(db *sqlx.DB, boardName string) ([]BoardDB, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// 時間の整形
 		DB.Time2 = StringTime(DB.Time)
 		result = append(result, DB)
 	}
@@ -80,6 +80,7 @@ func DeleteBoardWrites(db *sqlx.DB, boardName, id string) error {
 	fmt.Println("DeleteBoardWrites")
 	query := "UPDATE " + boardName + " SET text = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
+	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}

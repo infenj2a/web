@@ -25,34 +25,6 @@
 </header>
 {{end}}
 
-{{define "login"}}
-<div class="column is-3 is-offset-4">
-<form action="/login" method="post">
-    <div class="card-header bg-transparent font-weight-bold">
-        掲示板で使用する名前を入力してください
-    </div>
-    <div class="card-body">
-        <div class="form-label-group">
-            <label class="label">ユーザー名</label>
-            <input type="text" size="40" maxlength="10" placeholder="1文字以上10文字以下" name="UN">
-        </div>
-        <div class="form-label-group">
-            <label class="label">PASSWORD</label>
-            <input type="password" size="40" maxlength="10" placeholder="0文字以上10文字以下" name="PW">
-            <div class="text-right mt-md-3">
-                <a class="text-right mt-md-3" href="">パスワード忘れ</a>
-            </div>
-        </div>
-        <div class="card-footer bg-transparent text-center">
-            <button class="btn btn-outline-info  btn-lg">
-                    LOGIN
-            </button>
-        </div>
-    </div>
-</form>
-</div>
-{{end}}
-
 {{define "footer"}}
 <div class="content has-text-centered container">
   <p> created by <a href="https://golang.org/">Golang</a></p><br>

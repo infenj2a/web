@@ -14,5 +14,21 @@ func InitDB() *sqlx.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+	//articlesテーブルが無ければ作成
+	query := `CREATE TABLE IF NOT EXISTS articles(
+		id SERIAL NOT NULL,
+		title VARCHAR(40),
+		status VARCHAR(10),
+		updatetime TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (id)
+		)`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = stmt.Exec()
+	if err != nil {
+		log.Fatal(err)
+	}
 	return db
 }

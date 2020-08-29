@@ -16,7 +16,7 @@ type Server struct {
 	DB *sqlx.DB
 }
 
-//TOPページ　状態が死んでいるスレッドの取得は行わない
+//TOPページ statusがDeadのレコードは取得せず、getRecord件数単位で取得
 func (s *Server) GetArticlePage(c *gin.Context) {
 	index := c.Param("page")
 	page, err := strconv.Atoi(index)
@@ -24,12 +24,17 @@ func (s *Server) GetArticlePage(c *gin.Context) {
 		page = 1
 	}
 	errMsg := ""
+	//articles 		= ページ情報
+	//div 				= ページャー用 計算用
+	//pageStruct 	= ページャー用 配列
 	articles, div, pageStruct, err := model.GetArticles(s.DB, page)
 	if err != nil {
 		articles = []model.ArticleDB{}
 		pageStruct = []model.CountPage{}
 		errMsg = "エラー発生"
 	}
+	//prevPage = ページャー用 戻る判定 0の時はindex.htmlで表示されない仕様
+	//nextPage = ページャー用 進む判定 0の時はindex.htmlで表示されない仕様
 	prevPage := page - 1
 	nextPage := page + 1
 	if nextPage > div {
@@ -69,7 +74,7 @@ func (s *Server) GetArticleNewPage(c *gin.Context) {
 	return
 }
 
-//新規スレッドよりスレッドが作成された場合
+//新規スレッド作成要求が発生した場合
 func (s *Server) PostArticleNewPage(c *gin.Context) {
 	//POSTされた情報を分解
 	c.Request.ParseForm()
@@ -79,6 +84,7 @@ func (s *Server) PostArticleNewPage(c *gin.Context) {
 	board.UserName = c.Request.Form["name"][0]
 	board.Text = c.Request.Form["text"][0]
 
+	//情報に不備がないかを確認
 	if article.Title == "" {
 		c.HTML(http.StatusBadRequest, "new.tmpl", gin.H{
 			"errMsg": "タイトルを入力して下さい",
@@ -94,7 +100,8 @@ func (s *Server) PostArticleNewPage(c *gin.Context) {
 	if board.UserName == "" {
 		board.UserName = "名無しさん"
 	}
-	//一度、ArticleDBに登録を実行し、idを取得
+
+	//一度、ArticleDBに登録を実行し、挿入したidを取得
 	id := model.PostArticleNewPages(s.DB, article.Title)
 	if id == 0 {
 		c.HTML(http.StatusBadRequest, "new.tmpl", gin.H{
@@ -112,24 +119,27 @@ func (s *Server) PostArticleNewPage(c *gin.Context) {
 		})
 		return
 	}
-	//作成したBoard専用のDBにArticleDBと同じ内容を追記
+
+	//作成したBoard専用のDBにArticleDBと同じ内容を追記(タイトルは格納しない)
 	if err := model.InsertBoard(s.DB, boardName, board.UserName, board.Text); err != nil {
 		c.HTML(http.StatusBadRequest, "new.tmpl", gin.H{
 			"errMsg": "専用スレッドへの書き込みに失敗しました",
 		})
 		return
 	}
+	//新規作成スレッドの表示
 	c.Redirect(http.StatusMovedPermanently, "/board/"+tableID)
 	return
 }
 
-//スレッドの内容を見る
+//TOPページより特定のスレッドを開いた際の処理
 func (s *Server) SeeBoardPage(c *gin.Context) {
 	fmt.Println("SeeBoardPage")
 	id := c.Param("id")
 	boardName := "board" + id
 	errMsg := ""
-	//スレッドのタイトルを取得しなおす
+
+	//idよりスレッドのタイトルの取得
 	article, err := model.GetArticleOne(s.DB, id)
 	if err != nil {
 		errMsg = "スレッドのタイトルが正常に取得できませんでした"
@@ -138,7 +148,7 @@ func (s *Server) SeeBoardPage(c *gin.Context) {
 		return
 	}
 
-	//スレッド情報の取得
+	//専用スレッドの情報を取得
 	board, err := model.SeeBoardPages(s.DB, boardName)
 	if err != nil {
 		errMsg = "スレッドのロード失敗"
@@ -155,36 +165,40 @@ func (s *Server) SeeBoardPage(c *gin.Context) {
 	return
 }
 
-//スレッド内からの新規書き込み
+//専用スレッド内からの書き込み追加
 func (s *Server) WriteBoardPage(c *gin.Context) {
 	fmt.Println("WriteBoardPage")
-	//POSTされた情報を分解
 	c.Request.ParseForm()
 	boardName := c.Param("boardName")
 	board := new(model.BoardDB)
 	board.UserName = c.Request.Form["name"][0]
 	board.Text = c.Request.Form["text"][0]
+	id := strings.Replace(boardName, "board", "", 1)
+	if board.Text == "" {
+		c.Redirect(http.StatusMovedPermanently, "/board/"+id)
+
+	}
 	if board.UserName == "" {
 		board.UserName = "名無しさん"
 	}
 
 	//ArticleDBの対象スレッドの時間を更新
-	id := strings.Replace(boardName, "board", "", 1)
 	err := model.UpdateArticleTimes(s.DB, id)
 	if err != nil {
-		log.Fatal(err)
-		c.Redirect(http.StatusMovedPermanently, "/")
+		c.Redirect(http.StatusMovedPermanently, "/board/"+id)
 		return
 	}
 
 	//BoradDBにINSERT
-	if err := model.InsertBoard(s.DB, boardName, board.UserName, board.Text); err != nil {
+	err = model.InsertBoard(s.DB, boardName, board.UserName, board.Text)
+	if err != nil {
 		log.Fatal(err)
 	}
 	c.Redirect(http.StatusMovedPermanently, "/board/"+id)
 	return
 }
 
+//専用スレッドより書き込み削除が要求された場合
 func (s *Server) DeleteBoardWrite(c *gin.Context) {
 	boardName := c.Param("boardName")
 	id := c.Param("id")
@@ -197,6 +211,7 @@ func (s *Server) DeleteBoardWrite(c *gin.Context) {
 	return
 }
 
+//削除
 func (s *Server) DeleteArticlePage(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	fmt.Println(id)
@@ -212,6 +227,7 @@ func (s *Server) DeleteArticlePage(c *gin.Context) {
 	return
 }
 
+//全体表示から完全削除の要求があった場合
 func (s *Server) DropArticlePage(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -228,6 +244,7 @@ func (s *Server) DropArticlePage(c *gin.Context) {
 	return
 }
 
+//全体表示からステータスの変更要求があった場合
 func (s *Server) PostStatusChange(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -244,6 +261,7 @@ func (s *Server) PostStatusChange(c *gin.Context) {
 	return
 }
 
+//TOPページからの検索
 func (s *Server) PostSearchPage(c *gin.Context) {
 	c.Request.ParseForm()
 	errMsg := ""

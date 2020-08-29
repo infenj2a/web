@@ -1,5 +1,3 @@
-// main.go
-
 package main
 
 import (
@@ -22,6 +20,7 @@ func main() {
 	//css読み込み準備
 	r.Static("/css_chat", "./view/css_chat")
 	r.Static("/css_page", "./view/css_page")
+
 	//tmpl読み込み
 	r.LoadHTMLGlob("view/*tmpl")
 
@@ -58,7 +57,10 @@ func main() {
 			return q.Request.URL.Path == s.Request.URL.Path
 		})
 	})
+
+	//Herokuの環境変数より宛てられたポートを取得
 	port := os.Getenv("PORT")
+	//ローカル環境用に無い場合は8080で接続するようにする
 	if port == "" {
 		port = "8080"
 	}
