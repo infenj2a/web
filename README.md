@@ -11,8 +11,8 @@
 
 ## 使用物
 1. Golang  
-    gin　　htmlの制御に使用  
-    sqlx　　DBの操作に使用  
+    gin　　　　　 htmlの制御に使用  
+    sqlx　　　　　DBの操作に使用  
     melody.v1　　WebSocketにて使用
 
 1. javascript  
