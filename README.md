@@ -2,26 +2,27 @@
 - Golangを使用してWEB上で動作する
 - DBと連携して動的なデータの表示が可能となっている
 
-  勉強し始めて3か月程度なので、使用感よりも基礎的なことの積み重ねで一つの作品の構築という度合いが強いです。  
+  勉強し始めて3か月程度なので、  
+  使用感よりも基礎的なことの積み重ねで一つの作品の構築という度合いが強いです。  
   また、気軽に見ることができないサイトだと見る意欲が下がってしまうと感じたため、  
   ログイン等の機能を排除しております。  
-  お気軽に[サイト](https://pacific-bayou-32131.herokuapp.com/)を訪れて頂ければと思います。  
+  お気軽にサイトを訪れて頂ければと思います。  
   https://pacific-bayou-32131.herokuapp.com/
 
 ## 使用物
 1. Golang  
-    gin       htmlの制御に使用  
-    sqlx      DBの操作に使用  
-    melody.v1 WebSocketにて使用
+    gin            htmlの制御に使用  
+    sqlx            DBの操作に使用  
+    melody.v1    WebSocketにて使用
 
 1. javascript  
     WebSocket制御時に使用
 
-1. html  
-    表示
+1. 表示  
+    html
 
-1. css  
-    デザイン
+1. デザイン  
+    css
 
 1. DB  
     postgres
