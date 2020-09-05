@@ -10,6 +10,7 @@ import (
 
 type ArticleDB struct {
 	ID          string    `db:"id"`
+	Userid      string    `db:"userid"`
 	Title       string    `db:"title"`
 	Status      string    `db:"status"`
 	Updatetime  time.Time `db:"updatetime"`
@@ -56,7 +57,7 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 	query = "SELECT COUNT(status) FROM articles WHERE status = $1"
 	rows, err = db.Queryx(query, "Alive")
 	//count情報の取得
-	resultCount := checkCount(rows)
+	resultCount := CheckCount(rows)
 	//count情報よりページャーの作成
 	indexStruct, div := exprCount(resultCount, index)
 	if err != nil {
@@ -65,7 +66,7 @@ func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) 
 	return resultStruct, div, indexStruct, err
 }
 
-func checkCount(rows *sqlx.Rows) (count int) {
+func CheckCount(rows *sqlx.Rows) (count int) {
 	for rows.Next() {
 		err := rows.Scan(&count)
 		if err != nil {
@@ -161,9 +162,10 @@ func GetArticleOne(db *sqlx.DB, id string) ([]ArticleDB, error) {
 }
 
 // NewArticlePosts = INSERT
-func PostArticleNewPages(db *sqlx.DB, title string) int {
+func PostArticleNewPages(db *sqlx.DB, userid, title string) int {
 	fmt.Println("PostArticleNewPages")
-	query := "INSERT INTO articles (title,status) VALUES($1,$2) RETURNING id"
+	fmt.Println("userid=", userid)
+	query := "INSERT INTO articles (userid,title,status) VALUES($1,$2,$3) RETURNING id"
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
@@ -171,7 +173,7 @@ func PostArticleNewPages(db *sqlx.DB, title string) int {
 	}
 	id := 0
 	// 挿入したデータのID値を取得
-	err = stmt.QueryRow(title, "Alive").Scan(&id)
+	err = stmt.QueryRow(userid, title, "Alive").Scan(&id)
 	if err != nil {
 		log.Fatal(err)
 	}

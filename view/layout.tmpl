@@ -12,16 +12,31 @@
 
 {{define "header"}}
 <header>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div id="navbarBasicExample" class="navbar-menu is-active">
-      <div class="navbar-start">
-        <a href="/" class="navbar-item">トップページ</a>
-        <a href="/all" class="navbar-item">全スレッド表示</a>
-        <a href="/new" class="navbar-item">新規スレッド作成</a>
-        <a href="/lobby" class="navbar-item">リアルタイムチャット</a>
-      </div>
-    </div>
-  </nav>
+  <section class="hero is-info">
+    <div class="level-item">
+    <form action="/top" method="get">
+      <button class="button is-info is-inverted is-outlined">トップページ</button>
+    </form>
+    <form action="/all" method="get">
+      <button class="button is-info is-inverted is-outlined">全スレッド表示</button>
+    </form>
+    <form action="/new" method="get">
+      <button class="button is-info is-inverted is-outlined">新規スレッド作成</button>
+    </form>
+    <form action="/lobby" method="get">
+      <button class="button is-info is-inverted is-outlined">リアルタイムチャット</button>
+    </form>
+    {{if .Session}}
+      <form action="/bye" method="post">
+        <button class="button is-info is-inverted is-outlined">ログアウト</button>
+      </form>
+    {{else}}
+      <form action="/" method="post">
+        <button class="button is-info is-inverted is-outlined">ログイン</button>
+      </form>
+    {{end}}
+  </div>
+  </section>
 </header>
 {{end}}
 

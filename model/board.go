@@ -8,11 +8,12 @@ import (
 )
 
 type BoardDB struct {
-	ID       string    `db:"id"`
-	UserName string    `db:"name"`
-	Text     string    `db:"text"`
-	Time     time.Time `db:"time"`
-	Time2    string
+	ID     string    `db:"id"`
+	Userid string    `db:"userid"`
+	Name   string    `db:"name"`
+	Text   string    `db:"text"`
+	Time   time.Time `db:"time"`
+	Time2  string
 }
 
 //投稿時にTABLEを作成する
@@ -20,6 +21,7 @@ func CreateBoard(db *sqlx.DB, boardName string) error {
 	fmt.Println("CreateBoard")
 	query := `CREATE TABLE ` + boardName + ` (
 		id SERIAL NOT NULL,
+		userid VARCHAR(10),
 		name VARCHAR(10),
 		text VARCHAR(200),
 		time TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
@@ -38,15 +40,16 @@ func CreateBoard(db *sqlx.DB, boardName string) error {
 
 //作成したTABLEにデータの追加
 //idはTABLE検索用
-func InsertBoard(db *sqlx.DB, boardName, userName, text string) error {
+func InsertBoard(db *sqlx.DB, boardName, userid, name, text string) error {
 	fmt.Println("InsertBoard")
-	query := "INSERT INTO " + boardName + " (name,text) VALUES ($1,$2)"
+	fmt.Println("userid=", userid, "name=", name)
+	query := "INSERT INTO " + boardName + " (userid,name,text) VALUES ($1,$2,$3)"
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = stmt.Exec(userName, text)
+	_, err = stmt.Exec(userid, name, text)
 	if err != nil {
 		log.Fatal(err)
 	}

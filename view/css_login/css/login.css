@@ -1,0 +1,132 @@
+body {
+  background-color: #F3EBF6;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.main {
+  background-color: #FFF;
+  width: 400px;
+  height: 400px;
+  margin: 7em auto;
+  border-radius: 1.5em;
+  box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+}
+
+.sign {
+  padding-top: 30px;
+  color: #8C55AA;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.un {
+  width: 76%;
+  color: rgb(68, 50, 255);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 50px;
+  margin-left: 46px;
+  text-align: center;
+  margin-bottom: 27px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.pass {
+  width: 76%;
+  color: rgb(38, 50, 255);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 50px;
+  margin-left: 46px;
+  text-align: center;
+  margin-bottom: 27px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+form.form1 {
+  padding-top: 40px;
+}
+
+form.form2 {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.submit {
+  cursor: pointer;
+  border-radius: 5em;
+  color: #fff;
+  background: linear-gradient(to right, #9C27B0, #E040FB);
+  border: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  font-family: 'Ubuntu', sans-serif;
+  margin-left: 35%;
+  font-size: 13px;
+  box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+}
+
+.btn-square-above-look {
+  outline: none;
+  display: inline-block;
+  position: relative;
+  padding: 0.35em 1em;
+  background: #668ad8;/*ボタン色*/
+  color: #FFF;
+  text-decoration: none;
+  width: 150px;
+  height: 30px;
+}
+
+.btn-square-above-look:before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 0;
+  width: -webkit-calc(100% - 16px);
+  width: calc(100% - 16px);
+  height: 0;
+  border: solid 8px transparent;
+  border-bottom-color: #8eacec;/*ボタン色より明るめの色に*/
+}
+
+.btn-square-above-look:active {
+  outline: none;
+  /*押したとき*/
+  border-color: white;
+  padding: 0.32em 0.9em;
+  -webkit-transform: translateY(-2px);
+  transform: translateY(-2px);
+}
+
+.btn-square-above-look:active:before {
+  width: -webkit-calc(100% - 12px);
+  width: calc(100% - 12px);
+}
+
+.btn-square-above-look:active:before {
+  top:-12px;
+  border-width: 6px;
+}
+
+@media (max-width: 600px) {
+.main {
+    border-radius: 0px;
+}

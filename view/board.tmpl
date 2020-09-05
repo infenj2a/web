@@ -20,16 +20,26 @@
     <h1>{{.boardTitle}}</h1>
 </div>
 
+{{$SID := .Session}}
+
 {{$BoardName := .boardName}}
 {{range .board}}
   <table class="table" style="width:100%">
-    <th>{{.UserName}}</th><th align="right">{{.Time2}}</th>
+    <th>{{.Name}}</th><th align="right">{{.Time2}}</th>
       <tbody>
         <td>{{.Text}}</td>
         <td align="right">
-          <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
-            <button class="button">書き込みを削除</button>
-          </form>
+          {{if eq .Userid ""}}
+            <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
+              <button class="button">ゲストユーザーの書き込みは誰でも削除可能</button>
+            </form>
+          {{else if eq .Userid $SID }}
+            <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
+              <button class="button">書き込みを削除</button>
+            </form>
+          {{else}}
+            <button class="button">作成ユーザーのみ削除可能</button>
+          {{end}}
         </td>
     </tbody>
   </table>

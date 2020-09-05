@@ -15,6 +15,13 @@
 </div>
 {{end}}
 
+{{$SID := .Session}}
+{{with .Session}}
+  <div style="color:blue">
+    <p>ようこそ{{.}}さん</p>
+  </div>
+{{end}}
+
 <div class="content has-text-centered">
   <form action="/search" method="post" style="display:inline;" >
     <p>検索したいスレッドの名称を入れて下さい</p>
@@ -42,9 +49,17 @@
       </td>
       <td>{{.Updatetime2}}</td>
       <td>
-        <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
-          <button class="button-two"><span>削除</span></button>
-        </form>
+        {{if eq .Userid ""}}
+          <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
+            <button class="button-two"><span>ゲストユーザー作成の掲示板は誰でも削除可能</span></button>
+          </form>
+        {{else if eq .Userid $SID}}
+          <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
+            <button class="button-two"><span>削除可能</span></button>
+          </form>
+        {{else}}
+          <button class="button-two"><span>作成ユーザーのみ削除可能</span></button>
+        {{end}}
       </td>
     </tr>
   {{end}}

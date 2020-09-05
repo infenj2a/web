@@ -1,0 +1,42 @@
+<html>
+
+<head>
+  <style type="text/css" media="screen">
+    @import url("/css_login/css/login.css");
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>新規登録</title>
+</head>
+
+<body>
+  {{if .errMsg}}
+    <div style="color:red" align="center">
+      <p> {{.errMsg}} </p>
+    </div>
+  {{end}}
+
+  <div class="main">
+    <p class="sign" align="center">新規登録</p>
+    <form action="/create" method="post" class="form1">
+      <input class="un " type="text" name="ID" maxlength="10" placeholder="Username" required>
+      <input class="pass" type="password" name="PW" maxlength="10" placeholder="Password" required>
+      <button class="submit">登録</button>
+    </form>
+    <table align="center">
+      <tr>
+        <td>
+          <form action="/" method="get" class="form2">
+            <button class="btn-square-above-look">ログイン画面</button>
+          </form>
+        </td>
+        <td>
+          <form action="/top" method="get" class="form2">
+            <button class="btn-square-above-look">ゲストログイン</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
