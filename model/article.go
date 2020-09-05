@@ -26,6 +26,8 @@ const (
 	getRecord = 5
 	// 時間のフォーマット用
 	Layout = "2006-01-02 15:04:05"
+	// 新規スレッド書き込み時のロケーション
+	location = "Asia/Tokyo"
 )
 
 func GetArticles(db *sqlx.DB, index int) ([]ArticleDB, int, []CountPage, error) {
@@ -237,13 +239,17 @@ func StatusChangePage(db *sqlx.DB, id int, status string) error {
 
 func UpdateArticleTimes(db *sqlx.DB, id string) error {
 	fmt.Println("UpdateArticleTimes")
+	loc, err := time.LoadLocation(location)
+	if err != nil {
+		loc = time.FixedZone(location, 9*60*60)
+	}
 	query := "UPDATE articles SET updatetime = $1 WHERE id = $2"
 	stmt, err := db.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = stmt.Exec(time.Now(), id)
+	_, err = stmt.Exec(time.Now().In(loc), id)
 	if err != nil {
 		log.Fatal(err)
 	}
