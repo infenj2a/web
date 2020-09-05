@@ -30,7 +30,7 @@
   </form>
 </div>
 
-<table class="table" style="width:100%;">
+<table class="table" style="width:90%;" align="center">
   <thead>
     <tr>
       <th>タイトル</th>
@@ -51,14 +51,14 @@
       <td>
         {{if eq .Userid ""}}
           <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
-            <button class="button-two"><span>ゲストユーザー作成の掲示板は誰でも削除可能</span></button>
+            <button class="button is-info"><span>ゲストユーザー作成の掲示板は誰でも削除可能</span></button>
           </form>
         {{else if eq .Userid $SID}}
           <form action="/delete/{{.ID}}" method="post" style="display:inline;" >
-            <button class="button-two"><span>削除可能</span></button>
+            <button class="button is-success"><span>削除可能</span></button>
           </form>
         {{else}}
-          <button class="button-two"><span>作成ユーザーのみ削除可能</span></button>
+          <button class="button is-black"><span>作成ユーザーのみ削除可能</span></button>
         {{end}}
       </td>
     </tr>

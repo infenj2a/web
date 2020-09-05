@@ -31,14 +31,14 @@
         <td align="right">
           {{if eq .Userid ""}}
             <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
-              <button class="button">ゲストユーザーの書き込みは誰でも削除可能</button>
+              <button class="button is-info">ゲストユーザーの書き込みは誰でも削除可能</button>
             </form>
           {{else if eq .Userid $SID }}
             <form action="/cancel/{{$BoardName}}/{{.ID}}" method="post" style="display:inline;" >
-              <button class="button">書き込みを削除</button>
+              <button class="button is-success">書き込みを削除</button>
             </form>
           {{else}}
-            <button class="button">作成ユーザーのみ削除可能</button>
+            <button class="button is-black">作成ユーザーのみ削除可能</button>
           {{end}}
         </td>
     </tbody>

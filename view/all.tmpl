@@ -34,23 +34,23 @@
         {{if or (eq .Userid "") (eq .Userid $SID)}}
           <form action="/status/{{.ID}}/{{.Status}}" method="post" style="display:inline;" >
             {{if ne .Status "Alive"}}
-              <button class="button">復活依頼</button>
+              <button class="button is-success">復活依頼</button>
             {{else}}
-              <button class="button">削除依頼</button>
+              <button class="button is-success">削除依頼</button>
             {{end}}
           </form>
         {{else}}
-            <button class="button">削除権限無し</button>
+            <button class="button is-black">削除権限無し</button>
         {{end}}
       </td>
       <td>
         {{if ne .Status "Alive"}}
             {{if or (eq .Userid "") (eq .Userid $SID)}}
               <form action="/drop/{{.ID}}/{{.Status}}" method="post" style="display:inline;" >
-                <button class="button">削除可能</button>
+                <button class="button is-success">削除可能</button>
               </form>
             {{else}}
-              <button class="button">削除権限無し</button>
+              <button class="button is-black">削除権限無し</button>
             {{end}}
         {{end}}
       </td>

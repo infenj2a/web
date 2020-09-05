@@ -44,28 +44,21 @@
   text-transform: uppercase;
   outline: none;
   overflow: hidden;
-  position: relative;
   color: #fff;
   font-weight: 700;
   font-size: 15px;
   background-color: #222;
-  padding: 17px 60px;
   margin: 0 auto;
   box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
 .button-two span {
-  position: relative;
   z-index: 1;
 }
 
 .button-two:after {
-  content: "";
-  position: absolute;
   left: 0;
   top: 0;
-  height: 490%;
-  width: 140%;
   background: #78c7d2;
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;
